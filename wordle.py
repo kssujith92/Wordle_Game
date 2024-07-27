@@ -27,11 +27,19 @@ def wordle_check(W,fw,G):
         g=G[i]
         if g not in fw.keys():
             continue
+        elif g==W[i]:
+            C[i]=2
+            if fg[g]==fw[g]:
+                g_pos = [pos for pos, char in enumerate(G) if char == g]
+                g_pos.reverse()
+                for p in g_pos:
+                    if C[p]==1:
+                        C[p]=0
+                        fg[g]-=1
+                        break
+            fg[g]+=1
         elif fg[g]<fw[g]:
-            if g==W[i]:
-                C[i]=2
-            else:
-                C[i]=1
+            C[i]=1
             fg[g]+=1
     return C
 
@@ -64,13 +72,13 @@ while c<6:
     if len(G)!=5 or (d.check(G)==False):
         print('Invalid')
     else:
-            G=G.upper()
-            C=wordle_check(W,fw,G)
-            print_color(G,C)
-            c+=1
-            if sum(C)==10:
-                print('Congrats: ',c,'/',6)
-                f=1
-                break
+        G=G.upper()
+        C=wordle_check(W,fw,G)
+        print_color(G,C)
+        c+=1
+        if sum(C)==10:
+            print('Congrats: ',c,'/',6)
+            f=1
+            break
 if f==0:
     print('Fail. The word is: ',W)
